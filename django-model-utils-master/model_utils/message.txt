@@ -1,0 +1,1306 @@
+Booking
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/booking.css' %}">
+</head>
+<section class="section">
+    <div class="container booking-container">
+        <h2 class="section-title">Book a Service</h2>
+
+        {% if success %}
+            <p class="success-msg">Your booking was successfully submitted!</p>
+        {% endif %}
+
+        <form method="post" class="booking-form">
+            {% csrf_token %}
+            
+            <!-- New: Product Type -->
+            <div class="form-group">
+                <label for="id_product_type">Product Type</label>
+                {{ form.product_type }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_service_type">Service Type</label>
+                {{ form.service_type }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                {{ form.name }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_date">Date</label>
+                {{ form.date }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_time">Time</label>
+                {{ form.time }}
+            </div>
+
+            <button type="submit" class="btn">Book Now</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+Contact 
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+
+    <!-- Page Title -->
+    <h2 class="page-title">HAVE SOME QUESTIONS?</h2>
+
+    <!-- Optionally display a success message -->
+    {% if success_message %}
+      <p class="success-msg">{{ success_message }}</p>
+    {% endif %}
+
+    <!-- Centered Contact Form -->
+    <div class="contact-form-container" style="margin: 0 auto; max-width: 600px;">
+      <form method="POST" action="{% url 'contact' %}">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <input type="text" name="subject" placeholder="Subject" required>
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn">SEND MESSAGE</button>
+      </form>
+    </div>
+    <!-- End Contact Form -->
+
+  </div> <!-- End .container -->
+</section>
+{% endblock %}
+
+Dash board
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<div class="dashboard-container">
+    <h2>Welcome, {{ username }}!</h2>
+    <p>This is your dashboard. You are now logged in.</p>
+    <a href="{% url 'logout' %}" class="logout-btn">Log Out</a>
+
+    <div class="my-bookings">
+        <h3>Your Bookings</h3>
+        {% if bookings %}
+            <ul>
+                {% for booking in bookings %}
+                    <li>
+                        <div class="booking-info">
+                            <p><strong>Name:</strong> {{ booking.name }}</p>
+                            <p><strong>Product:</strong> {{ booking.product_type }}</p>
+                            <p><strong>Service:</strong> {{ booking.service_type }}</p>
+                            <p><strong>Date:</strong> {{ booking.date }}</p>
+                            <p><strong>Time:</strong> {{ booking.time }}</p>
+                        </div>
+                        <div class="booking-actions">
+                            <a href="{% url 'edit-booking' booking.id %}" class="edit-booking" title="Edit Booking">
+                                <img src="{% static 'images/edit-icon.png' %}" alt="Edit" class="edit-icon">
+                            </a>
+                            <a href="{% url 'delete-booking' booking.id %}" class="delete-booking" onclick="return confirm('Are you sure you want to delete this booking?');" title="Delete Booking">
+                                <img src="{% static 'images/delete-icon.png' %}" alt="Delete" class="delete-icon">
+                            </a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't booked any services yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+Edit booking
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/booking.css' %}">
+</head>
+<section class="section">
+    <div class="container booking-container">
+        <h2 class="section-title">Edit Your Booking</h2>
+        <form method="post" class="booking-form">
+            {% csrf_token %}
+
+            <!-- New: Product Type -->
+            <div class="form-group">
+                <label for="id_product_type">Product Type</label>
+                {{ form.product_type }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="id_date">Date</label>
+                {{ form.date }}
+            </div>
+            <div class="form-group">
+                <label for="id_time">Time</label>
+                {{ form.time }}
+            </div>
+            <div class="form-group">
+                <label for="id_service_type">Service Type</label>
+                {{ form.service_type }}
+            </div>
+            <button type="submit" class="btn">Update Booking</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+Green energy
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<section class="green-energy-info-section">
+  <div class="container">
+    <h1 class="section-title">Green Energy Information</h1>
+    {% for item in items %}
+      <div class="info-item">
+        <div class="info-image">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.title }}">
+          {% else %}
+            <img src="{% static 'images/placeholder.png' %}" alt="No image available">
+          {% endif %}
+        </div>
+        <div class="info-content">
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.description }}</p>
+        </div>
+      </div>
+    {% empty %}
+      <p>No green energy information available yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+Home 
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Make Your Home a Powerhouse.</h1>
+        <a href="{% url 'products' %}" class="btn">Explore Our Products</a>
+    </div>
+    <div class="hero-wave"></div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="featured-products">
+    <h2>Our Featured Products</h2>
+    <div class="product-list">
+        {% for product in featured_products %}
+          <div class="product-item">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+              <div class="product-image-placeholder">
+                <p>No image available</p>
+              </div>
+            {% endif %}
+            <div class="product-details">
+              <h3>{{ product.name }}</h3>
+              <p class="description">{{ product.description|truncatewords:20 }}</p>
+              <p class="price">£{{ product.price }}</p>
+              <a href="{% url 'booking' %}?product={{ product.category|lower }}" class="btn">Book Now</a>
+            </div>
+          </div>
+        {% empty %}
+          <p>No featured products available at the moment.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Go Green Section -->
+<section class="go-green">
+    <h2>Ready to Go Green?</h2>
+    <p>Join the eco-friendly revolution with Rolsa Technologies. Discover our products, learn about sustainable energy, or book a consultation today!</p>
+    <div class="go-green-buttons">
+        <a href="{% url 'products' %}" class="green-btn">Explore Our Products</a>
+        <a href="#" class="learn-more-btn">Learn More</a>
+    </div>
+</section>
+
+{% endblock %}
+
+
+Manage
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="booking-section">
+    <h2>Your Bookings</h2>
+    <ul>
+        {% for booking in bookings %}
+            <li><strong>{{ booking.service_type }}</strong> - {{ booking.date }} at {{ booking.time }}</li>
+        {% empty %}
+            <li>You haven't booked any services yet.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+Products
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
+</head>
+<h2>Our Products</h2>
+<div class="product-list">
+    {% for product in products %}
+        <div class="product-item">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+            {% else %}
+                <div class="product-image-placeholder">
+                    <p>No image available</p>
+                </div>
+            {% endif %}
+            <div class="product-details">
+                <h3>{{ product.name }}</h3>
+                <p class="description">{{ product.description }}</p>
+                <p class="price">£{{ product.price }}</p>
+                <p class="category">{{ product.category }}</p>
+                <!-- Link to booking page with the product query parameter -->
+                <a href="{% url 'booking' %}?product={{ product.category|lower }}" class="btn">
+                    Book Now
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <p>No products available at the moment. Please check back later.</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+Admin
+from django.contrib import admin
+from .models import Profile, Product, Contact, Booking, GreenEnergyInfo
+
+admin.site.register(Profile)
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'price')
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'created_at')
+
+@admin.register(Booking)
+class BookingAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'service_type', 'date', 'time', 'user', 'created_at')
+    list_filter = ('service_type', 'date')
+    search_fields = ('name', 'email')
+
+@admin.register(GreenEnergyInfo)
+class GreenEnergyInfoAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+
+Forms
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
+from .models import Contact, Booking
+
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+class CustomUserLoginForm(AuthenticationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ['name', 'email', 'subject', 'message']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your Email'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your Message', 'rows': 4}),
+        }
+
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['name', 'email', 'product_type', 'service_type', 'date', 'time']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
+
+Models	
+from django.db import models
+from django.contrib.auth.models import User
+
+# Create your models here.
+
+class GreenEnergyInfo(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    image = models.ImageField(upload_to='green_energy/')
+
+    def __str__(self):
+        return self.title
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to Django User
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    email = models.EmailField()
+
+    def __str__(self):
+        return f'{self.firstname} {self.lastname}'
+
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    category = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='products/')
+    is_featured = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+    
+
+class Contact(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Booking(models.Model):
+    SERVICE_CHOICES = [
+        ('consultation', 'Consultation'),
+        ('installation', 'Installation'),
+    ]
+
+    # New product choices for the products page
+    PRODUCT_CHOICES = [
+        ('ev', 'EV Charger'),
+        ('solar', 'Solar Panel'),
+        ('smart', 'Smart Home Energy Management'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    # New field to store the product selected from products page
+    product_type = models.CharField(max_length=20, choices=PRODUCT_CHOICES, null=True, blank=True)
+    service_type = models.CharField(max_length=20, choices=SERVICE_CHOICES)
+    date = models.DateField()
+    time = models.TimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.service_type} for {self.name} on {self.date} at {self.time}"
+
+Urls 
+from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from . import views
+
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('products/', views.products, name='products'),
+    path('green-energy-info/', views.green_energy_info_view, name='green_energy_info'),
+    path('carbon_calculator/', views.carbon_calculator, name='carbon_calculator'),
+    path('contact/', views.contact, name='contact'),
+    
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('register/', views.register, name='register'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('booking/', views.book_service, name='booking'),
+    path('my-bookings/', views.manage_bookings, name='my-bookings'),
+    path('delete-booking/<int:booking_id>/', views.delete_booking, name='delete-booking'),
+    path('edit-booking/<int:booking_id>/', views.edit_booking, name='edit-booking'),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+Views 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .forms import CustomUserCreationForm, CustomUserLoginForm, ContactForm, BookingForm
+from .models import Profile, Product, Booking, GreenEnergyInfo
+
+def products(request):
+    all_products = Product.objects.all()
+    return render(request, 'products.html', {'products': all_products})
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Automatically create a profile linked to the new user
+            Profile.objects.create(
+                user=user,
+                firstname=user.username,
+                lastname="Not provided",
+                email=user.email
+            )
+            messages.success(request, 'Registration successful!')
+            return redirect('login')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'register.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = CustomUserLoginForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Login successful!')
+                return redirect('dashboard')
+            else:
+                messages.error(request, 'Invalid credentials.')
+    else:
+        form = CustomUserLoginForm()
+    return render(request, 'login.html', {'form': form})
+
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'Logged out successfully!')
+    return redirect('login')
+
+@login_required
+def dashboard(request):
+    username = request.user.username
+    bookings = Booking.objects.filter(user=request.user)
+    return render(request, 'dashboard.html', {'username': username, 'bookings': bookings})
+
+
+@login_required
+def delete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    booking.delete()
+    messages.success(request, "Booking deleted successfully!")
+    return redirect('dashboard')
+
+
+def home(request):
+    featured_products = Product.objects.filter(is_featured=True)  # Make sure your Product model has an 'is_featured' field or use your own criteria
+    return render(request, 'home.html', {'featured_products': featured_products})
+
+
+def green_energy_info_view(request):
+    items = GreenEnergyInfo.objects.all()
+    return render(request, 'green_energy_info.html', {'items': items})
+
+
+@login_required
+def book_service(request):
+    initial = {}
+    if 'product' in request.GET:
+        prod = request.GET.get('product')
+        if prod in ['ev', 'solar', 'smart']:
+            initial['product_type'] = prod
+
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.user = request.user
+            booking.save()
+            return render(request, 'booking.html', {
+                'form': BookingForm(),  # refresh form after successful submission
+                'success': True
+            })
+    else:
+        form = BookingForm(initial=initial)
+    return render(request, 'booking.html', {'form': form})
+
+
+@login_required
+def manage_bookings(request):
+    bookings = Booking.objects.filter(user=request.user)
+    return render(request, 'manage_bookings.html', {'bookings': bookings})
+
+@login_required
+def edit_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    if request.method == "POST":
+        form = BookingForm(request.POST, instance=booking)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Booking updated successfully!")
+            return redirect('dashboard')
+    else:
+        form = BookingForm(instance=booking)
+    return render(request, 'edit_booking.html', {'form': form})
+
+
+def carbon_calculator(request):
+    return render(request, 'carbon_calculator.html')
+
+def contact(request):
+    success_message = ""
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            success_message = "Thank you! Your message has been sent successfully."
+            form = ContactForm()  # Clear the form after submission
+    else:
+        form = ContactForm()
+    return render(request, 'contact.html', {'form': form, 'success_message': success_message})
+
+Products 
+:root {
+    --blue-ncs: #1e88c5;
+    --jonquil: #ffcc00;
+    --davys-gray: #595959;
+    --isabelline: #f5f1ec;
+    --white: #ffffff;
+    --pigment-green: #4ca850;
+    --light-gray: #eaeaea;
+    --font-family: 'Helvetica Neue', sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+}
+
+/* Container for product cards (Grid layout) */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 20px;
+}
+
+@media (max-width: 992px) {
+    .product-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .product-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Product Card */
+.product-item {
+    background-color: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Product Image: Show entire image (no cropping) */
+.product-image {
+    width: 100%;
+    height: auto;             /* height adjusts based on aspect ratio */
+    object-fit: contain;      /* ensures the whole image is visible */
+    display: block;
+    background-color: var(--light-gray);
+}
+
+/* Placeholder for missing image */
+.product-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background-color: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Product Details */
+.product-details {
+    padding: 15px;
+}
+
+.product-details h3 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    color: var(--davys-gray);
+}
+
+.product-details p {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    color: var(--davys-gray);
+}
+
+.product-details .price {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--pigment-green);
+    margin-bottom: 10px;
+}
+
+.product-details .category {
+    font-size: 0.9rem;
+    color: var(--blue-ncs);
+}
+
+/* Book Now Button */
+.product-details .btn {
+    display: inline-block;
+    background-color: var(--pigment-green);
+    color: var(--white);
+    padding: 0.6rem 1.2rem;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.product-details .btn:hover {
+    background-color: var(--blue-ncs);
+}
+
+/* Page Heading */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--davys-gray);
+}
+
+
+Home 
+:root {
+    --blue-ncs: #1e88c5ff;
+    --jonquil: #ffcc00ff;
+    --davys-gray: #595959ff;
+    --isabelline: #f5f1ecff;
+    --white: #ffffffff;
+    --black: #000000ff;
+    --pigment-green: #4ca850ff;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--isabelline);
+    color: var(--davys-gray);
+    margin: 0;
+    padding: 0;
+}
+/* Hero Section */
+.hero {
+    position: relative;
+    background-image: url("/static/images/hero.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
+    text-align: center;
+    padding: 0 20px;
+}
+.hero-content {
+    max-width: 800px;
+}
+.hero h1 {
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+}
+.hero p {
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+.btn {
+    background-color: var(--jonquil);
+    color: var(--black);
+    padding: 15px 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.btn:hover {
+    background-color: var(--blue-ncs);
+    color: var(--white);
+}
+.hero-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: var(--isabelline);
+    clip-path: ellipse(70% 100% at 50% 100%);
+}
+/* Featured Products Section */
+.featured-products {
+    text-align: center;
+    padding: 60px 20px;  /* Increased vertical padding */
+    background-color: var(--isabelline);
+    margin-top: 40px;
+}
+
+.featured-products h2 {
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+    color: var(--davys-gray);
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;  /* Increased gap for more breathing room */
+    padding: 0 20px;
+}
+
+/* Each product card */
+.product-item {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding-bottom: 20px;  /* Extra padding at the bottom */
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Product image */
+.product-image {
+    width: 100%;
+    height: auto;             /* height adjusts based on aspect ratio */
+    object-fit: contain;      /* ensures the whole image is visible */
+    display: block;
+    background-color: var(--light-gray);
+}
+
+/* Placeholder for missing image */
+.product-image-placeholder {
+    width: 100%;
+    height: 240px;
+    background-color: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Product details styling */
+.product-details {
+    padding: 20px;
+}
+
+.product-details h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: var(--blue-ncs);
+}
+
+.product-details .description {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: var(--davys-gray);
+}
+
+.product-details .price {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--pigment-green);
+    margin-bottom: 15px;
+}
+
+/* Book Now button styling remains as before */
+.product-details .btn {
+    display: inline-block;
+    background-color: var(--pigment-green);
+    color: var(--white);
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.product-details .btn:hover {
+    background-color: var(--blue-ncs);
+}
+
+/* Go Green Section */
+.go-green {
+    background-color: #4ca85176;
+    text-align: center;
+    padding: 40px 0;
+    margin: 40px 0;
+    border-radius: 10px;
+}
+.go-green h2 {
+    font-size: 28px;
+    color: var(--davys-gray);
+    margin-bottom: 10px;
+}
+.go-green p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+.go-green-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+.green-btn, .learn-more-btn {
+    padding: 12px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+.green-btn {
+    background-color: #4ca850;
+    color: var(--white);
+}
+.green-btn:hover {
+    background-color: #3a8a3a;
+}
+.learn-more-btn {
+    background-color: var(--isabelline);
+    color: var(--davys-gray);
+}
+.learn-more-btn:hover {
+    background-color: #dcdcdc;
+}
+/* High Contrast Mode for Home Page */
+.high-contrast .hero {
+    background-color: #1c1c1c;
+    /* Dark Gray Background */
+    background-image: none;
+    /* Remove the background image */
+    color: #ffffff;
+    /* White Text */
+}
+.high-contrast .hero h1,.high-contrast .hero p {
+    color: #ffffff;
+    text-shadow: none;
+}
+.high-contrast .btn {
+    background-color: #007bff;
+    /* Bright Blue */
+    color: #ffffff;
+}
+.high-contrast .btn:hover {
+    background-color: #0056b3;
+    /* Darker Blue */
+    color: #ffffff;
+}
+/* Footer */
+.footer {
+    background-color: rgba(255, 204, 0, 0.75);
+    /* ffcc00 color with 75% opacity */
+    color: var(--davys-gray);
+    text-align: center;
+    padding: 50px 0;
+    margin-top: 20px;
+}
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+.footer-section {
+    margin: 20px;
+}
+.footer-section h4 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: var(--davys-gray);
+    position: relative;
+}
+.footer-section h4::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: var(--davys-gray);
+    margin: 5px auto;
+}
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+.footer-section ul li {
+    margin: 8px 0;
+}
+.footer-section ul li a {
+    text-decoration: none;
+    color: var(--davys-gray);
+    transition: color 0.3s ease;
+}
+.footer-section ul li a:hover {
+    color: var(--blue-ncs);
+}
+.social-icons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.social-icons a {
+    text-decoration: none;
+}
+.social-icon {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.8;
+}
+.social-icon:hover {
+    transform: scale(1.2);
+    opacity: 1;
+}
+.footer p {
+    margin-top: 30px;
+    color: var(--davys-gray);
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .service-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+    .card {
+        width: 90%;
+        /* Adjust to fit smaller screens */
+    }
+}
+
+Dashboard
+
+:root {
+    --blue-ncs: #1e88c5;
+    --jonquil: #ffcc00;
+    --davys-gray: #595959;
+    --isabelline: #f5f1ec;
+    --white: #ffffff;
+    --pigment-green: #4ca850;
+    --light-gray: #eaeaea;
+    --font-family: 'Helvetica Neue', sans-serif;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 2.5rem;
+    background-color: var(--isabelline);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: var(--font-family);
+}
+
+/* Headings */
+.dashboard-container h2 {
+    font-size: 2.2rem;
+    color: var(--blue-ncs);
+    margin-bottom: 1.2rem;
+}
+
+/* Intro Text */
+.dashboard-container p {
+    font-size: 1.1rem;
+    color: var(--davys-gray);
+    margin-bottom: 1.5rem;
+}
+
+/* Logout Button */
+.logout-btn {
+    display: inline-block;
+    background-color: var(--pigment-green);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 2rem;
+}
+.logout-btn:hover {
+    background-color: var(--blue-ncs);
+    transform: translateY(-2px);
+}
+
+/* Bookings Section */
+.my-bookings {
+    text-align: left;
+    margin-top: 2rem;
+}
+.my-bookings h3 {
+    font-size: 1.8rem;
+    color: var(--davys-gray);
+    margin-bottom: 1rem;
+}
+
+/* Bookings List */
+.my-bookings ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Booking List Items */
+.my-bookings li {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.my-bookings li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Booking Actions Container (for grouping icons) */
+.booking-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;  /* Controls the spacing between icons */
+}
+
+/* Action Links (Edit and Delete) */
+.edit-booking,
+.delete-booking {
+    text-decoration: none;
+    color: var(--blue-ncs);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.edit-booking:hover,
+.delete-booking:hover {
+    color: var(--pigment-green);
+    transform: scale(1.05);
+}
+
+/* Icon Styling */
+.edit-icon,
+.delete-icon {
+    width: 22px;
+    height: 22px;
+    vertical-align: top;
+}
+
+Booking
+:root {
+    --blue-ncs: #1e88c5;
+    --jonquil: #ffcc00;
+    --davys-gray: #595959;
+    --isabelline: #f5f1ec;
+    --white: #ffffff;
+    --pigment-green: #4ca850;
+    --light-gray: #eaeaea;
+}
+
+h2 {
+    color: var(--white);
+}
+
+/* Overall Page Background */
+.booking-page {
+    padding: 50px 0;
+    background-color: var(--davys-gray);
+}
+
+/* Container for Booking Section */
+.booking-container {
+    max-width: 900px;           /* Slightly narrower for better readability */
+    margin: 0 auto;
+    background-color: var(--isabelline);
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    padding: 2rem;             /* Added padding inside the container */
+}
+
+/* Optional: If you have a calendar or image, keep this. Otherwise, remove. */
+.calendar-section {
+    flex: 1 1 50%;
+    background-color: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.calendar-section img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Form Section Styles */
+.form-section {
+    flex: 1 1 50%;
+    padding: 40px;
+}
+
+/* Section Title */
+.form-section h2,
+.section-title {
+    color: var(--blue-ncs);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form Layout */
+.booking-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Grouping Each Field with Label */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: var(--davys-gray);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--davys-gray);
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: var(--white);
+}
+
+/* Button Styling */
+.btn.book-btn,
+.booking-form button.btn {
+    background-color: var(--pigment-green);
+    color: var(--white);
+    padding: 12px 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Slight spacing above button */
+    align-self: flex-start;
+}
+
+.btn.book-btn:hover,
+.booking-form button.btn:hover {
+    background-color: var(--blue-ncs);
+}
+
+/* Success Message Styling */
+.success-msg {
+    background-color: #e6f4ea;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-left: 5px solid var(--pigment-green);
+    color: var(--davys-gray);
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+
+
+
+
+
+
+
+
+
+
+
